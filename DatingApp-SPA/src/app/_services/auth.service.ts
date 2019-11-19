@@ -33,8 +33,8 @@ register(model: any) {
 
 loggedIn() {
   const token = localStorage.getItem('token');
-  // console.log('checking loggedIn in AuthService...');
-  // console.log('isTokenExpired', this.jwtHelper.isTokenExpired(token));
+  console.log('checking loggedIn in AuthService...');
+  console.log('isTokenExpired', this.jwtHelper.isTokenExpired(token));
   return !this.jwtHelper.isTokenExpired(token);
 }
 
