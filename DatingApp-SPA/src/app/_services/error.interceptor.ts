@@ -16,7 +16,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           return throwError(httpError.statusText);
         }
         if (httpError instanceof HttpErrorResponse) {
-            console.log('Exception HttpErrorReponse instance');
             const applicationError = httpError.headers.get('Application-Error');
             console.log('applicationError', applicationError);
             if (applicationError) {
@@ -25,9 +24,10 @@ export class ErrorInterceptor implements HttpInterceptor {
 
             const serverError = httpError.error;
             let modelStateErrors = '';
-            console.log('Server Error', serverError);
-            if (serverError) { // } && typeof serverError.errors === 'object') {
+            console.log('Server Error', serverError, ' and typeof=', typeof serverError);
+            if (serverError && typeof serverError.errors === 'object') {
               // console.log('in serverError key array parsing');
+              // window['se'] = serverError;
               for (const key in serverError) {
                 if (serverError[key]) {
                   modelStateErrors += serverError[key] + '\n';
