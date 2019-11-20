@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  baseUrl = 'http://localhost:5000/api/auth/';
+  baseUrl = environment.apiUrl + 'auth/';
   jwtHelper = new JwtHelperService();
   decodedToken: any;
 
@@ -33,8 +34,8 @@ register(model: any) {
 
 loggedIn() {
   const token = localStorage.getItem('token');
-  console.log('checking loggedIn in AuthService...');
-  console.log('isTokenExpired', this.jwtHelper.isTokenExpired(token));
+  // console.log('checking loggedIn in AuthService...');
+  // console.log('isTokenExpired', this.jwtHelper.isTokenExpired(token));
   return !this.jwtHelper.isTokenExpired(token);
 }
 
