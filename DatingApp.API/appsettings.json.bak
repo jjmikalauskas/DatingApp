@@ -10,10 +10,5 @@
       "Default": "Warning"
     }
   },
-  "AllowedHosts": "*",
-  "CloudinarySettings": { 
-    "CloudName": "five-star-software",
-    "ApiKey": "976989886787795",
-    "ApiSecret": "Kop52kVY7rG_6nupmAZJ7cYLkBc"
-  }
+  "AllowedHosts": "*"
 }

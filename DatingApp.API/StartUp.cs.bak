@@ -32,8 +32,6 @@ namespace DatingApp.API
 
         public IConfiguration Configuration { get; }
 
-        readonly string MyCorsPolicy = "_myCors";
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -86,12 +84,7 @@ namespace DatingApp.API
             }
 
             // app.UseHttpsRedirection();
-            //app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // AllowCredentials());
-            // app.UseCors(MyCorsPolicy);
-            // app.UseCors(x => x.WithOrigins("http://localhost:4200")
-            //     .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-            app.UseCors(x => x.WithOrigins("http://localhost:4200")
-                .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
         }

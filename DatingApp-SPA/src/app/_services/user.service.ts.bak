@@ -30,8 +30,4 @@ updateUser(id: number, user: User) {
   return this.http.put(this.baseUrl + 'users/' + id, user);
 }
 
-// 9769-8988-6787-795
-// Kop52kVY7rG_6nupmAZJ7cYLkBc
-
-
 }

@@ -60,7 +60,7 @@
                     </form>
                 </tab>
                 <tab heading="Edit Photos">
-                    <app-photo-editor [photos]="user.photos"></app-photo-editor>
+                    <p>Photo edit/upload will go here</p>
                 </tab>
             </tabset>
         </div>
