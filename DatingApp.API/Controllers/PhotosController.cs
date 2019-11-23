@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -34,11 +35,19 @@ namespace DatingApp.API.Controllers
             _mapper = mapper;
             _cloudinaryConfig = cloudinaryConfig;
 
+    //CloudName": "five-star-software",
+    //"ApiKey": "976989886787795",
+    //"ApiSecret": "Kop52kVY7rG_6nupmAZJ7cYLkBc"
+
             Account acc = new Account(
                 _cloudinaryConfig.Value.CloudName, 
                 _cloudinaryConfig.Value.ApiKey, 
                 _cloudinaryConfig.Value.ApiSecret
             );
+
+            acc.Cloud = "five-star-software";
+            acc.ApiKey = "976989886787795"; 
+            acc.ApiSecret = "Kop52kVY7rG_6nupmAZJ7cYLkBc";
 
             _cloudinary = new Cloudinary(acc);
         }
@@ -55,14 +64,18 @@ namespace DatingApp.API.Controllers
 
 
         [HttpPost]
-        [EnableCors("AllowAllHeaders")]
-        public async Task<IActionResult> AddPhotoToUser(int userId, 
-            [FromForm] PhotoForCreationDto picFile) // photoForCreationDto)
+        // [EnableCors("AllowAnyHeaders")]
+        // [RequestFormSizeLimit(valueCountLimit: 5000)]
+        public async Task<IActionResult> AddPhotoToUser(int userId,
+                                                        [FromForm] PhotoForCreationDto photoForCreationDto) // photoForCreationDto)
         {
-           PhotoForCreationDto photoForCreationDto = picFile; // new PhotoForCreationDto(); 
-
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            try {
+                var currentUser = User.FindFirst(ClaimTypes.Name);
+                if (currentUser!=null && userId != int.Parse(currentUser.Value))
+                    return Unauthorized();
+            }
+            catch (Exception ex) {
+            }
             
             var userFromRepo = await _repo.GetUser(userId);
 

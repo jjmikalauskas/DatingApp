@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos: Photo[];
-  uploader: FileUploader; //  = new FileUploader({url: URL});
+  uploader: FileUploader;
   hasBaseDropZoneOver: boolean;
   baseUrl = environment.apiUrl;
 
@@ -28,17 +28,19 @@ export class PhotoEditorComponent implements OnInit {
   initializeUploader() {
     this.uploader = new FileUploader({
       url: this.baseUrl + 'users/' + this.authService.decodedToken.nameid + '/photos',
-      authToken: 'Bearer' + localStorage.getItem('token'),
+      // authToken: 'Bearer' + localStorage.getItem('token'),
       isHTML5: true,
       allowedFileType: ['image'],
       removeAfterUpload: true,
       autoUpload: false,
       maxFileSize: 10 * 1024 * 1024
+      , headers: [
+      //   { name: 'Content-Type', value: 'application/x-www-form-urlencoded' },
+        { name: 'Access-Control-Allow-Origin', value: 'http://localhost:4200' }
+    ]
     });
 
-    this.uploader.onBeforeUploadItem = (item) => {
-      item.withCredentials = false;
-    };
+    this.uploader.onBeforeUploadItem = (item) => { item.withCredentials = false; };
 
     this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
 
