@@ -3,12 +3,8 @@ import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders, HttpHeaderResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../_models/user';
-
-// const httpOptions = {
-//   headers: new HttpHeaders({
-//     'Authorization': 'Bearer ' + localStorage.getItem('token')
-//   })
-// };
+import { AuthService } from './auth.service';
+import { AlertifyService } from './alertify.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +12,7 @@ import { User } from '../_models/user';
 export class UserService {
   baseUrl = environment.apiUrl;
 
-constructor(private http: HttpClient) { }
+constructor(private http: HttpClient, private authService: AuthService, private alertify: AlertifyService) { }
 
 getUsers(): Observable<User[]> {
   return this.http.get<User[]>(this.baseUrl + 'users');
@@ -28,6 +24,10 @@ getUser(id): Observable<User> {
 
 updateUser(id: number, user: User) {
   return this.http.put(this.baseUrl + 'users/' + id, user);
+}
+
+setMainPhoto(userId: number, id: number) {
+  return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + id, {});
 }
 
 // 9769-8988-6787-795

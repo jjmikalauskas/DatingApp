@@ -16,7 +16,10 @@ export class MemberEditResolver implements Resolve<User> {
     }
 
     resolve(route: ActivatedRouteSnapshot): Observable<User> {
-        return this.userService.getUser(this.authService.decodedToken.nameid).pipe(
+        // const dToken = this.authService.decodedToken;
+        const nameId = this.authService.decodedToken.nameid;
+        // console.log(dToken, nameId);
+        return this.userService.getUser(nameId).pipe(
             catchError(error => {
                 this.alertify.error('Problem retrieving user in member-edit.resolver' + error);
                 this.router.navigate(['/members']);

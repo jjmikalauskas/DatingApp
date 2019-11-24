@@ -19,8 +19,7 @@ namespace DatingApp.API.Controllers
 {
     // [Authorize]
     [Route("api/users/{userid}/photos")]
-    [ApiController]
-    
+    [ApiController]    
 
     public class PhotosController : ControllerBase
     {
@@ -39,6 +38,7 @@ namespace DatingApp.API.Controllers
     //"ApiKey": "976989886787795",
     //"ApiSecret": "Kop52kVY7rG_6nupmAZJ7cYLkBc"
 
+            // This is not reading then out of the config correctly! 
             Account acc = new Account(
                 _cloudinaryConfig.Value.CloudName, 
                 _cloudinaryConfig.Value.ApiKey, 
@@ -116,5 +116,41 @@ namespace DatingApp.API.Controllers
 
             return BadRequest("Could not add photo");
         }
+
+
+        [HttpPost("{id}/setMain")]
+        public async Task<IActionResult> SetMainPhoto(int userId, int id)
+        {
+            try {
+                var currentUser = User.FindFirst(ClaimTypes.Name);
+                if (currentUser!=null && userId != int.Parse(currentUser.Value))
+                    return Unauthorized();
+            }
+            catch (Exception ex) {
+            }
+
+            var userFromRepo = await _repo.GetUser(userId);
+
+            if (!userFromRepo.Photos.Any(p => p.Id == id))
+                return Unauthorized();
+
+            var photoFromRepo = await _repo.GetPhoto(id); 
+
+            if (photoFromRepo.IsMain)
+                return BadRequest("This is already the main photo");
+
+            var currentMainPhoto = await _repo.GetMainPhoto(userId);
+            if (currentMainPhoto==null)
+                return BadRequest("No main photo found!");
+
+            currentMainPhoto.IsMain = false; 
+            photoFromRepo.IsMain = true; 
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            return BadRequest("Could not set photo to main");
+        }
+    
     }
 }
