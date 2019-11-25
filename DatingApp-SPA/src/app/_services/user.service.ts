@@ -27,7 +27,12 @@ updateUser(id: number, user: User) {
 }
 
 setMainPhoto(userId: number, id: number) {
-  return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + id, {});
+  return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + id + '/setMain', {});
+}
+
+deletePhoto(userId: number, id: number) {
+  console.log('deleting photo', userId, id);
+  return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id);
 }
 
 // 9769-8988-6787-795
