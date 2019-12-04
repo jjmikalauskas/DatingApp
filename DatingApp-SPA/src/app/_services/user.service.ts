@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { AlertifyService } from './alertify.service';
 import { PaginatedResult } from '../_models/pagination';
 import { map } from 'rxjs/operators';
+import { Message } from '../_models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ getUsers(page?, itemsPerPage?, userParams?, likesParam?): Observable<PaginatedRe
         }
         return paginatedResult;
       })
-    )
+    );
 }
 
 getUser(id): Observable<User> {
@@ -73,6 +74,60 @@ deletePhoto(userId: number, id: number) {
 sendLike(id: number, recipientId: number) {
   return this.http.post(this.baseUrl + 'users/' + id + '/like/' + recipientId, {});
 }
+
+getMessages(id: number, page?, itemsPerPage?, messageContainer?) {
+  const paginatedResult: PaginatedResult<Message[]> = new PaginatedResult<Message[]>();
+
+  let params = new HttpParams();
+
+  params = params.append('MessageContainer', messageContainer);
+
+  if (page != null && itemsPerPage != null) {
+    params = params.append('pageNumber', page);
+    params = params.append('pageSize', itemsPerPage);
+  }
+
+  const url = this.baseUrl + 'users/' + id + '/messages' ;
+  console.log(url);
+
+  return this.http.get<Message[]>(url, {observe: 'response', params})
+  .pipe(
+    map(response => {
+      paginatedResult.result = response.body;
+      if (response.headers.get('Pagination') != null) {
+        paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+      }
+      return paginatedResult;
+    })
+  );
+}
+
+getMessageThread(id: number, recipientId: number) {
+  const url = this.baseUrl + 'users/' + id + '/messages/thread/' + recipientId;
+  console.log('getmessagethread ur=', url);
+  return this.http.get<Message[]>(url);
+}
+
+sendMessage(id: number, message: Message) {
+  const url = this.baseUrl + 'users/' + id + '/messages';
+  console.log('send message url=', url);
+  return this.http.post(url, message);
+}
+
+deleteMessage(id: number, userId: number) {
+  const url = this.baseUrl + 'users/' + userId + '/messages/' + id;
+  console.log('delete message url=', url);
+  return this.http.post(url, {});
+}
+
+markMessageAsRead(id: number, userId: number) {
+  const url = this.baseUrl + 'users/' + userId + '/messages/' + id + '/read';
+  console.log('mark message as read url=', url);
+  this.http.post(url, {})
+    .subscribe();
+}
+
+
 
 // 9769-8988-6787-795
 // Kop52kVY7rG_6nupmAZJ7cYLkBc
